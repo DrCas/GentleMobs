@@ -1,0 +1,33 @@
+# GentleMobs global behavior mode.
+#
+# PASSIVE:
+#   Hostile mobs do not target players.
+#   When attacked, they flee and do not retaliate.
+#
+# NEUTRAL:
+#   Hostile mobs ignore players by default.
+#   If attacked, they may retaliate normally.
+#
+# VANILLA:
+#   GentleMobs does not alter normal Minecraft behavior.
+
+mode: PASSIVE
+
+flee:
+  distance: 12.0
+  speed: 1.3
+  duration-ticks: 60
+
+# Per-mob mode overrides.
+#
+# Use Bukkit EntityType names, for example:
+# ZOMBIE, SKELETON, CREEPER, ZOGLIN
+#
+# Example:
+#
+# mob-overrides:
+#   ZOMBIE: NEUTRAL
+#   CREEPER: VANILLA
+
+mob-overrides:
+  CREAKING: VANILLA
