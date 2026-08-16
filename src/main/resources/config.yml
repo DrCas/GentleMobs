@@ -32,9 +32,9 @@ flee:
 mob-overrides:
   CREAKING: VANILLA
 
-  recipes:
-    nether-star:
-      enabled: true
+recipes:
+   nether-star:
+    enabled: true
 
-    dragons-breath:
-      enabled: true
+   dragons-breath:
+     enabled: true
