@@ -1,0 +1,6 @@
+name: GentleMobs
+version: '${version}'
+
+main: io.github.drcas.gentlemobs.GentleMobsPlugin
+api-version: '26.2'
+load: POSTWORLD
