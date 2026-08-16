@@ -1,5 +1,6 @@
 package io.github.drcas.gentlemobs;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,8 +54,11 @@ public final class GentleMobsConfig {
 
         mobOverrides.clear();
 
-        var section = plugin.getConfig()
-                .getConfigurationSection("mob-overrides");
+        ConfigurationSection section =
+                plugin.getConfig()
+                        .getConfigurationSection(
+                                "mob-overrides"
+                        );
 
         if (section != null) {
 
@@ -79,16 +83,120 @@ public final class GentleMobsConfig {
                         section.getString(key)
                 );
 
-                mobOverrides.put(entityType, mode);
+                mobOverrides.put(
+                        entityType,
+                        mode
+                );
             }
         }
     }
 
-    public GentleMode getMode(EntityType entityType) {
+    /*
+     * Resolve the actual GentleMobs mode for an entity.
+     *
+     * Per-mob overrides take priority over the global mode.
+     */
+    public GentleMode getMode(
+            EntityType entityType
+    ) {
 
         return mobOverrides.getOrDefault(
                 entityType,
                 globalMode
+        );
+    }
+
+    public GentleMode getGlobalMode() {
+        return globalMode;
+    }
+
+    public boolean hasOverride(
+            EntityType entityType
+    ) {
+
+        return mobOverrides.containsKey(
+                entityType
+        );
+    }
+
+    public GentleMode getOverride(
+            EntityType entityType
+    ) {
+
+        return mobOverrides.get(
+                entityType
+        );
+    }
+
+    public Map<EntityType, GentleMode>
+    getMobOverrides() {
+
+        return Map.copyOf(
+                mobOverrides
+        );
+    }
+
+    /*
+     * Permanently change the global mode.
+     *
+     * This writes to config.yml and immediately updates
+     * the loaded configuration.
+     */
+    public void setGlobalMode(
+            GentleMode mode
+    ) {
+
+        plugin.getConfig().set(
+                "mode",
+                mode.name()
+        );
+
+        plugin.saveConfig();
+
+        globalMode = mode;
+    }
+
+    /*
+     * Permanently create or replace a per-mob override.
+     */
+    public void setOverride(
+            EntityType entityType,
+            GentleMode mode
+    ) {
+
+        plugin.getConfig().set(
+                "mob-overrides." +
+                        entityType.name(),
+                mode.name()
+        );
+
+        plugin.saveConfig();
+
+        mobOverrides.put(
+                entityType,
+                mode
+        );
+    }
+
+    /*
+     * Permanently remove a per-mob override.
+     *
+     * The mob will immediately fall back to the global mode.
+     */
+    public void removeOverride(
+            EntityType entityType
+    ) {
+
+        plugin.getConfig().set(
+                "mob-overrides." +
+                        entityType.name(),
+                null
+        );
+
+        plugin.saveConfig();
+
+        mobOverrides.remove(
+                entityType
         );
     }
 
@@ -104,16 +212,23 @@ public final class GentleMobsConfig {
         return fleeDurationTicks;
     }
 
-    private GentleMode parseMode(String value) {
+    private GentleMode parseMode(
+            String value
+    ) {
 
         if (value == null) {
             return GentleMode.PASSIVE;
         }
 
         try {
+
             return GentleMode.valueOf(
-                    value.trim().toUpperCase(Locale.ROOT)
+                    value.trim()
+                            .toUpperCase(
+                                    Locale.ROOT
+                            )
             );
+
         } catch (IllegalArgumentException exception) {
 
             plugin.getLogger().warning(

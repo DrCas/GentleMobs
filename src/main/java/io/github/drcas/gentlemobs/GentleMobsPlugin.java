@@ -7,18 +7,62 @@ public final class GentleMobsPlugin extends JavaPlugin {
     private GentleMobsConfig gentleMobsConfig;
     private NeutralCombatTracker neutralCombatTracker;
     private WitherBehaviorListener witherBehaviorListener;
+    private GentleRecipeManager recipeManager;
 
     @Override
     public void onEnable() {
 
-        gentleMobsConfig = new GentleMobsConfig(this);
+        /*
+         * Load configuration.
+         */
+        gentleMobsConfig =
+                new GentleMobsConfig(this);
+
         gentleMobsConfig.load();
 
+        /*
+         * Register custom GentleMobs recipes.
+         */
+        recipeManager =
+                new GentleRecipeManager(this);
+
+        recipeManager.reloadRecipes();
+
+        /*
+         * Start Neutral combat tracking.
+         */
         neutralCombatTracker =
                 new NeutralCombatTracker(this);
 
         neutralCombatTracker.start();
 
+        /*
+         * Register GentleMobs command system.
+         */
+        GentleMobsCommand gentleMobsCommand =
+                new GentleMobsCommand(
+                        this,
+                        gentleMobsConfig,
+                        neutralCombatTracker,
+                        recipeManager
+                );
+
+        if (getCommand("gentlemobs") != null) {
+
+            getCommand("gentlemobs")
+                    .setExecutor(
+                            gentleMobsCommand
+                    );
+
+            getCommand("gentlemobs")
+                    .setTabCompleter(
+                            gentleMobsCommand
+                    );
+        }
+
+        /*
+         * Generic mob behavior.
+         */
         getServer().getPluginManager().registerEvents(
                 new MobTargetListener(
                         gentleMobsConfig,
@@ -36,6 +80,9 @@ public final class GentleMobsPlugin extends JavaPlugin {
                 this
         );
 
+        /*
+         * Special mob compatibility.
+         */
         getServer().getPluginManager().registerEvents(
                 new WardenBehaviorListener(
                         gentleMobsConfig,
@@ -52,6 +99,13 @@ public final class GentleMobsPlugin extends JavaPlugin {
                 );
 
         getServer().getPluginManager().registerEvents(
+                witherBehaviorListener,
+                this
+        );
+
+        witherBehaviorListener.start();
+
+        getServer().getPluginManager().registerEvents(
                 new DragonBehaviorListener(
                         gentleMobsConfig,
                         neutralCombatTracker
@@ -59,15 +113,10 @@ public final class GentleMobsPlugin extends JavaPlugin {
                 this
         );
 
-        getServer().getPluginManager().registerEvents(
-                witherBehaviorListener,
-                this
-        );
-
-        witherBehaviorListener.start();
-
         getLogger().info(
-                "GentleMobs 0.1.0 enabled."
+                "GentleMobs " +
+                        getPluginMeta().getVersion() +
+                        " enabled."
         );
     }
 
@@ -80,6 +129,10 @@ public final class GentleMobsPlugin extends JavaPlugin {
 
         if (witherBehaviorListener != null) {
             witherBehaviorListener.stop();
+        }
+
+        if (recipeManager != null) {
+            recipeManager.removeRecipes();
         }
 
         getLogger().info(
