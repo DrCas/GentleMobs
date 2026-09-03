@@ -17,16 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LivingEntityDamageMixin {
 
     @Inject(method = "hurtServer", at = @At("RETURN"))
-    private void gentlemobs$startFleeAfterPlayerHit(
+    private void gentlemobs$handlePlayerHit(
             ServerLevel level,
             DamageSource source,
             float amount,
             CallbackInfoReturnable<Boolean> cir
     ) {
-        if (GentleMobsFabric.getGlobalMode() != GentleMode.PASSIVE) {
-            return;
-        }
-
         if (!Boolean.TRUE.equals(cir.getReturnValue())) {
             return;
         }
@@ -40,8 +36,18 @@ public abstract class LivingEntityDamageMixin {
             return;
         }
 
-        if (mob instanceof FleeingMob fleeingMob) {
-            fleeingMob.gentlemobs$startFlee(player);
+        GentleMode mode = GentleMobsFabric.getGlobalMode();
+
+        if (mode == GentleMode.PASSIVE) {
+            if (mob instanceof FleeingMob fleeingMob) {
+                fleeingMob.gentlemobs$startFlee(player);
+            }
+            return;
+        }
+
+        if (mode == GentleMode.NEUTRAL) {
+            GentleMobsFabric.engageNeutral(mob, player);
+            mob.setTarget(player);
         }
     }
 }
