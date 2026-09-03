@@ -2,8 +2,7 @@ package io.github.drcas.gentlemobs.fabric.mixin;
 
 import io.github.drcas.gentlemobs.fabric.GentleMobsFabric;
 import io.github.drcas.gentlemobs.fabric.GentleMode;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
+import io.github.drcas.gentlemobs.fabric.mixin.access.FleeingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -12,10 +11,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Mob.class)
-public abstract class MobTargetMixin {
+public abstract class MobTargetMixin implements FleeingMob {
 
     @Unique
     private static final double GENTLEMOBS_FLEE_DISTANCE = 12.0D;
@@ -47,22 +45,9 @@ public abstract class MobTargetMixin {
         ci.cancel();
     }
 
-    @Inject(method = "hurtServer", at = @At("RETURN"))
-    private void gentlemobs$startFlee(
-            ServerLevel level,
-            DamageSource source,
-            float amount,
-            CallbackInfoReturnable<Boolean> cir
-    ) {
+    @Override
+    public void gentlemobs$startFlee(Player player) {
         if (GentleMobsFabric.getGlobalMode() != GentleMode.PASSIVE) {
-            return;
-        }
-
-        if (!Boolean.TRUE.equals(cir.getReturnValue())) {
-            return;
-        }
-
-        if (!(source.getEntity() instanceof Player player)) {
             return;
         }
 
@@ -72,7 +57,6 @@ public abstract class MobTargetMixin {
 
         gentlemobs$fleeFrom = player;
         gentlemobs$fleeTicksRemaining = GENTLEMOBS_FLEE_DURATION_TICKS;
-
         gentlemobs$updateFleePath(mob, player);
     }
 
