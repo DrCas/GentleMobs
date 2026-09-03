@@ -32,15 +32,15 @@ public abstract class MobTargetMixin implements FleeingMob {
 
     @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
     private void gentlemobs$preventPlayerTarget(LivingEntity target, CallbackInfo ci) {
-        if (!(target instanceof Player)) {
-            return;
-        }
-
-        if (GentleMobsFabric.getGlobalMode() == GentleMode.VANILLA) {
+        if (!(target instanceof Player player)) {
             return;
         }
 
         Mob mob = (Mob) (Object) this;
+        if (GentleMobsFabric.canTargetPlayer(mob, player)) {
+            return;
+        }
+
         mob.setAggressive(false);
         ci.cancel();
     }
@@ -61,7 +61,20 @@ public abstract class MobTargetMixin implements FleeingMob {
     }
 
     @Inject(method = "serverAiStep", at = @At("TAIL"))
-    private void gentlemobs$continueFlee(CallbackInfo ci) {
+    private void gentlemobs$afterServerAiStep(CallbackInfo ci) {
+        Mob mob = (Mob) (Object) this;
+
+        if (GentleMobsFabric.getGlobalMode() == GentleMode.NEUTRAL
+                && GentleMobsFabric.isNeutralEngaged(mob)) {
+            LivingEntity target = mob.getTarget();
+            if (!(target instanceof Player player)
+                    || !player.isAlive()
+                    || mob.level() != player.level()
+                    || !GentleMobsFabric.isNeutralEngagedWith(mob, player)) {
+                GentleMobsFabric.disengageNeutral(mob);
+            }
+        }
+
         if (GentleMobsFabric.getGlobalMode() != GentleMode.PASSIVE) {
             gentlemobs$stopFlee();
             return;
@@ -71,7 +84,6 @@ public abstract class MobTargetMixin implements FleeingMob {
             return;
         }
 
-        Mob mob = (Mob) (Object) this;
         Player player = gentlemobs$fleeFrom;
 
         if (!mob.isAlive()
