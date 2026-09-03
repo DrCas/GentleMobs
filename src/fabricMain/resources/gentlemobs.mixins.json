@@ -5,6 +5,7 @@
   "mixins": [
     "MobTargetMixin",
     "LivingEntityDamageMixin",
+    "CubeMobContactDamageMixin",
     "HoglinBehaviorMixin",
     "HoglinAiMixin",
     "ZoglinBehaviorMixin",
