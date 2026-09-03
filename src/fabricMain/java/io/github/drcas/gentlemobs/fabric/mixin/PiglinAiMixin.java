@@ -1,7 +1,6 @@
 package io.github.drcas.gentlemobs.fabric.mixin;
 
 import io.github.drcas.gentlemobs.fabric.GentleMobsFabric;
-import io.github.drcas.gentlemobs.fabric.GentleMode;
 import java.util.Optional;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,12 +23,9 @@ public abstract class PiglinAiMixin {
             Piglin body,
             CallbackInfoReturnable<Optional<? extends LivingEntity>> cir
     ) {
-        if (GentleMobsFabric.getGlobalMode() != GentleMode.PASSIVE) {
-            return;
-        }
-
         Optional<? extends LivingEntity> target = cir.getReturnValue();
-        if (target != null && target.isPresent() && target.get() instanceof Player) {
+        if (target != null && target.orElse(null) instanceof Player player
+                && !GentleMobsFabric.canTargetPlayer(body, player)) {
             cir.setReturnValue(Optional.empty());
         }
     }
@@ -41,8 +37,8 @@ public abstract class PiglinAiMixin {
             LivingEntity target,
             CallbackInfo ci
     ) {
-        if (GentleMobsFabric.getGlobalMode() == GentleMode.PASSIVE
-                && target instanceof Player) {
+        if (target instanceof Player player
+                && !GentleMobsFabric.canTargetPlayer(body, player)) {
             ci.cancel();
         }
     }
