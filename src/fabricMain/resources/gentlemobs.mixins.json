@@ -7,7 +7,9 @@
     "LivingEntityDamageMixin",
     "HoglinBehaviorMixin",
     "HoglinAiMixin",
-    "ZoglinBehaviorMixin"
+    "ZoglinBehaviorMixin",
+    "PiglinAiMixin",
+    "PiglinBruteAiMixin"
   ],
   "injectors": {
     "defaultRequire": 1
