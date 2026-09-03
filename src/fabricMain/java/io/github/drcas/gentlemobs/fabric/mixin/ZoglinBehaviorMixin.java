@@ -35,12 +35,9 @@ public abstract class ZoglinBehaviorMixin {
             Mob mob,
             CallbackInfoReturnable<Optional<? extends LivingEntity>> cir
     ) {
-        if (GentleMobsFabric.getGlobalMode() != GentleMode.PASSIVE) {
-            return;
-        }
-
         Optional<? extends LivingEntity> target = cir.getReturnValue();
-        if (target != null && target.orElse(null) instanceof Player) {
+        if (target != null && target.orElse(null) instanceof Player player
+                && !GentleMobsFabric.canTargetPlayer(mob, player)) {
             cir.setReturnValue(Optional.empty());
         }
     }
@@ -50,8 +47,9 @@ public abstract class ZoglinBehaviorMixin {
             LivingEntity target,
             CallbackInfo ci
     ) {
-        if (GentleMobsFabric.getGlobalMode() == GentleMode.PASSIVE
-                && target instanceof Player) {
+        Zoglin zoglin = (Zoglin) (Object) this;
+        if (target instanceof Player player
+                && !GentleMobsFabric.canTargetPlayer(zoglin, player)) {
             ci.cancel();
         }
     }
@@ -62,18 +60,20 @@ public abstract class ZoglinBehaviorMixin {
             Entity target,
             CallbackInfoReturnable<Boolean> cir
     ) {
-        if (GentleMobsFabric.getGlobalMode() == GentleMode.PASSIVE
-                && target instanceof Player) {
+        Zoglin zoglin = (Zoglin) (Object) this;
+        if (target instanceof Player player
+                && !GentleMobsFabric.canTargetPlayer(zoglin, player)) {
             cir.setReturnValue(false);
         }
     }
 
     private void gentlemobs$clearPlayerCombatState() {
-        if (GentleMobsFabric.getGlobalMode() != GentleMode.PASSIVE) {
+        Zoglin zoglin = (Zoglin) (Object) this;
+        if (GentleMobsFabric.getGlobalMode() == GentleMode.VANILLA
+                || GentleMobsFabric.isNeutralEngaged(zoglin)) {
             return;
         }
 
-        Zoglin zoglin = (Zoglin) (Object) this;
         BrainPlayerTargetController.clearPlayerCombatState(zoglin);
         zoglin.setTarget(null);
         zoglin.setAggressive(false);
