@@ -1,8 +1,8 @@
 package io.github.drcas.gentlemobs.fabric.mixin;
 
+import io.github.drcas.gentlemobs.fabric.FleeingMob;
 import io.github.drcas.gentlemobs.fabric.GentleMobsFabric;
 import io.github.drcas.gentlemobs.fabric.GentleMode;
-import io.github.drcas.gentlemobs.fabric.mixin.access.FleeingMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
