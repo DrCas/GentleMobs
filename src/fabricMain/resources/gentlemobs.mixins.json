@@ -6,6 +6,7 @@
     "MobTargetMixin",
     "LivingEntityDamageMixin",
     "HoglinBehaviorMixin",
+    "HoglinAiMixin",
     "ZoglinBehaviorMixin"
   ],
   "injectors": {
