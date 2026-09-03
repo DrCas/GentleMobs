@@ -1,36 +1,53 @@
 plugins {
-    `java-library`
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
+    id("fabric-loom") version (property("loom_version") as String)
+    `maven-publish`
 }
 
-group = "io.github.drcas"
-version = "0.2.0"
+group = property("group") as String
+version = property("version") as String
+
+base {
+    archivesName.set("GentleMobs-Fabric")
+}
 
 repositories {
     mavenCentral()
-
-    maven {
-        name = "papermc"
-        url = uri("https://repo.papermc.io/repository/maven-public/")
-    }
 }
 
 dependencies {
-    paperweight.paperDevBundle("26.2.build.+")
+    minecraft("com.mojang:minecraft:${property("minecraft_version")}")
+    implementation("net.fabricmc:fabric-loader:${property("loader_version")}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
+}
+
+sourceSets {
+    named("main") {
+        java.setSrcDirs(listOf("src/fabricMain/java"))
+        resources.setSrcDirs(listOf("src/fabricMain/resources"))
+    }
+}
+
+loom {
+    mods {
+        create("gentlemobs") {
+            sourceSet(sourceSets["main"])
+        }
+    }
+}
+
+tasks.processResources {
+    inputs.property("version", project.version)
+    filesMatching("fabric.mod.json") {
+        expand("version" to project.version)
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(25)
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
-}
-
-tasks {
-    processResources {
-        val props = mapOf("version" to version)
-
-        inputs.properties(props)
-
-        filesMatching("plugin.yml") {
-            expand(props)
-        }
-    }
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
