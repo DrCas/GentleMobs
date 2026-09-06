@@ -1,0 +1,50 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.146'
+    id 'idea'
+}
+group = 'io.github.drcas'
+version = '1.0.0'
+base { archivesName = 'GentleMobs-NeoForge-1.21.1' }
+java { toolchain.languageVersion = JavaLanguageVersion.of(21); withSourcesJar() }
+repositories { mavenCentral() }
+// Reuse the existing platform-independent enum without moving any Paper sources.
+sourceSets.main.java {
+    srcDir '../src/main/java'
+    include 'io/github/drcas/gentlemobs/neoforge/**'
+    include 'io/github/drcas/gentlemobs/GentleMode.java'
+}
+// Runtime integration tests are opt-in and never included in the distributable jar.
+if (providers.gradleProperty('gameTests').isPresent()) {
+    sourceSets.main.java.srcDir 'src/gameTest/java'
+    sourceSets.main.resources.srcDir 'src/gameTest/resources'
+}
+tasks.jar { exclude '**/neoforge/test/**'; exclude 'data/gentlemobs/structure/test_arena.nbt' }
+tasks.sourcesJar { exclude '**/neoforge/test/**' }
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+neoForge {
+    version = '21.1.249'
+    runs {
+        server { server(); programArgument '--nogui' }
+        gameTestServer {
+            type = 'gameTestServer'
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'gentlemobs'
+        }
+    }
+    mods { gentlemobs { sourceSet sourceSets.main } }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
+tasks.processResources {
+    inputs.property 'version', project.version
+    filesMatching('META-INF/neoforge.mods.toml') { expand version: project.version }
+}
+dependencies {
+    testImplementation 'com.google.code.gson:gson:2.10.1'
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+tasks.test { useJUnitPlatform() }

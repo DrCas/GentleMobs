@@ -1,0 +1,1 @@
+{"required":true,"minVersion":"0.8","package":"io.github.drcas.gentlemobs.neoforge.mixin","compatibilityLevel":"JAVA_21","mixins":["LivingTargetMixin","WardenMixin","WitherMixin","DragonPhaseMixin","DragonFlightMixin","PiglinAiMixin","PiglinBruteAiMixin","HoglinAiMixin"],"injectors":{"defaultRequire":1}}

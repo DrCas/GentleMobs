@@ -1,0 +1,8 @@
+{
+  "neoforge:conditions": [{"type":"gentlemobs:recipe_enabled","recipe":"nether-star"}],
+  "type":"minecraft:crafting_shaped",
+  "category":"misc",
+  "pattern":["NWN","WSW","NWN"],
+  "key":{"N":{"item":"minecraft:netherite_ingot"},"W":{"item":"minecraft:wither_skeleton_skull"},"S":{"item":"minecraft:soul_sand"}},
+  "result":{"id":"minecraft:nether_star","count":1}
+}

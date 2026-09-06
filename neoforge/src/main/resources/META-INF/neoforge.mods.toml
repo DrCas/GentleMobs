@@ -1,0 +1,22 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+[[mods]]
+modId="gentlemobs"
+version="${version}"
+displayName="GentleMobs"
+description='''Configurable passive, neutral, and vanilla hostile mob behavior. Vanilla entities only by default.'''
+[[dependencies.gentlemobs]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.249,21.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.gentlemobs]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
+[[mixins]]
+config="gentlemobs.mixins.json"
