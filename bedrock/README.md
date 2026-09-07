@@ -99,6 +99,7 @@ target filter logic, preservation of unrelated vanilla data, projectile ownershi
 and script event/timer behavior in a mocked Script API. They **do not execute
 Minecraft's AI**. An initial Bedrock 26.45 smoke check confirmed pack activation,
 the status command and an adult zombie ignoring a Survival player in PASSIVE.
+The user also confirmed in-game fleeing after a hit in PASSIVE mode.
 The remaining in-game acceptance checks are pending; see TESTING.md.
 
 The current differences and limits are:
