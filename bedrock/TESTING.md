@@ -8,8 +8,10 @@ being hit in PASSIVE mode: the basic fleeing check passes. The user also reporte
 that NEUTRAL worked in their in-game test. The exact neutral timeout was not
 separately reported or timed. The user confirmed that VANILLA attacks the
 Survival player without being hit first. Basic adult-zombie behavior has now
-passed in all three modes. Exact durations, switching an actively attacking
-zombie back to PASSIVE, repeat hits, projectile hits, persistence, variants and
+passed in all three modes. The user then confirmed that switching the actively
+attacking zombie from VANILLA to PASSIVE stopped its attacks and reported that
+it ran away during that test. Clearing an existing attack on mode change passes.
+Exact durations, repeat hits, projectile hits, persistence, variants and
 multiplayer still need the acceptance pass below.
 
 Use a new world, Normal difficulty, cheats enabled, and only the GentleMobs

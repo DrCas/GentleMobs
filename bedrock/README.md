@@ -104,6 +104,8 @@ NEUTRAL was subsequently reported working by the user; its exact timeout has
 not been separately timed.
 The user also confirmed unprovoked attacks in VANILLA, completing the basic
 adult-zombie behavior checks for all three modes.
+Switching an actively attacking zombie from VANILLA to PASSIVE also passed:
+the user confirmed that attacks stopped and observed it running away.
 The remaining in-game acceptance checks are pending; see TESTING.md.
 
 The current differences and limits are:
