@@ -14,6 +14,10 @@ or damage the player and subsequently wandered away. The user subsequently
 confirmed that hitting the creeper in PASSIVE makes it run away. Initial calm
 and basic hit/flee checks pass; NEUTRAL, VANILLA and charged-fuse tests remain
 pending. Exact flee duration and repeated hits have not been separately tested.
+During the requested NEUTRAL test, the user reported that the creeper explodes
+when followed and clarified that NEUTRAL was active. Calm behavior before the
+first hit, pursuit and the 30-second return to neutral were not separately
+confirmed, so the full NEUTRAL acceptance check remains pending.
 The first reload did not respond to script commands; removing and reactivating
 the pack in world settings resolved it. A world backup was made through the
 game's "Copy and continue" option before reactivation.
