@@ -13,9 +13,13 @@ attacking zombie from VANILLA to PASSIVE stopped its attacks and reported that
 it ran away during that test. Clearing an existing attack on mode change passes.
 The user also confirmed that after Save & Quit and reopening the world, status
 still reported PASSIVE and the zombie continued to ignore them. Global mode
-persistence across a world reload passes. Override precedence/clearing and
-override persistence, exact durations, repeat hits, projectile hits, chunk reloads,
-variants and multiplayer still need the acceptance pass below.
+persistence across a world reload passes. During the PASSIVE zombie override /
+global VANILLA check, the user confirmed the zombie remained passive and a
+separately summoned creeper behaved normally. Zombie override precedence passes;
+the creeper observation is an initial scope check, not evidence of compatibility
+with all other entities or add-ons. Override clearing and persistence, exact
+durations, repeat hits, projectile hits, chunk reloads, variants and multiplayer
+still need the acceptance pass below.
 
 Use a new world, Normal difficulty, cheats enabled, and only the GentleMobs
 prototype behavior pack. Enable the game's content log in Creator settings to
