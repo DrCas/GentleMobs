@@ -12,12 +12,14 @@ updated behavior pack, the script replied with global PASSIVE and no overrides.
 A creeper summoned two blocks in front of the Survival player did not explode
 or damage the player and subsequently wandered away. The user subsequently
 confirmed that hitting the creeper in PASSIVE makes it run away. Initial calm
-and basic hit/flee checks pass; NEUTRAL, VANILLA and charged-fuse tests remain
-pending. Exact flee duration and repeated hits have not been separately tested.
+and basic hit/flee checks pass; VANILLA and charged-fuse tests remain pending.
+Exact flee duration and repeated hits have not been separately tested.
 During the requested NEUTRAL test, the user reported that the creeper explodes
-when followed and clarified that NEUTRAL was active. Calm behavior before the
-first hit, pursuit and the 30-second return to neutral were not separately
-confirmed, so the full NEUTRAL acceptance check remains pending.
+when followed and clarified that NEUTRAL was active. Following the requested
+hit, retreat, 35-second wait and reapproach test, the user reported that it
+returned to passive behavior. Return to calm in NEUTRAL passes as a user-reported
+gameplay check; the exact 600-tick boundary was not measured. Calm behavior
+before the first hit and pursuit were not separately confirmed.
 The first reload did not respond to script commands; removing and reactivating
 the pack in world settings resolved it. A world backup was made through the
 game's "Copy and continue" option before reactivation.
