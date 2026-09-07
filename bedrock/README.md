@@ -110,6 +110,8 @@ Global mode persistence also passed: after leaving and reopening the world,
 the user confirmed PASSIVE was retained and the zombie still ignored them.
 The PASSIVE zombie override also passed with global VANILLA selected; the user
 reported that a separately summoned creeper retained normal behavior.
+Clearing the zombie override also passed: the user confirmed it attacked again
+under the global VANILLA setting.
 The remaining in-game acceptance checks are pending; see TESTING.md.
 
 The current differences and limits are:
