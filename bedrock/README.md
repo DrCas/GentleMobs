@@ -106,6 +106,8 @@ The user also confirmed unprovoked attacks in VANILLA, completing the basic
 adult-zombie behavior checks for all three modes.
 Switching an actively attacking zombie from VANILLA to PASSIVE also passed:
 the user confirmed that attacks stopped and observed it running away.
+Global mode persistence also passed: after leaving and reopening the world,
+the user confirmed PASSIVE was retained and the zombie still ignored them.
 The remaining in-game acceptance checks are pending; see TESTING.md.
 
 The current differences and limits are:

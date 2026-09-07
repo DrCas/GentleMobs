@@ -11,8 +11,11 @@ Survival player without being hit first. Basic adult-zombie behavior has now
 passed in all three modes. The user then confirmed that switching the actively
 attacking zombie from VANILLA to PASSIVE stopped its attacks and reported that
 it ran away during that test. Clearing an existing attack on mode change passes.
-Exact durations, repeat hits, projectile hits, persistence, variants and
-multiplayer still need the acceptance pass below.
+The user also confirmed that after Save & Quit and reopening the world, status
+still reported PASSIVE and the zombie continued to ignore them. Global mode
+persistence across a world reload passes. Override precedence/clearing and
+override persistence, exact durations, repeat hits, projectile hits, chunk reloads,
+variants and multiplayer still need the acceptance pass below.
 
 Use a new world, Normal difficulty, cheats enabled, and only the GentleMobs
 prototype behavior pack. Enable the game's content log in Creator settings to
