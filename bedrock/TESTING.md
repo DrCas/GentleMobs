@@ -4,9 +4,10 @@ Status: build/type-check and 8 automated tests pass. Initial Windows Bedrock
 **26.45** smoke check on 2026-09-06: pack activated in a new flat test world,
 status command returned PASSIVE, and a summoned adult zombie ignored the nearby
 Survival player. The user subsequently confirmed that the zombie flees after
-being hit in PASSIVE mode: the basic fleeing check passes. Exact duration,
-repeat hits, projectile hits, NEUTRAL, VANILLA, persistence, variants and
-multiplayer still need the acceptance pass below.
+being hit in PASSIVE mode: the basic fleeing check passes. The user also reported
+that NEUTRAL worked in their in-game test. The exact neutral timeout was not
+separately reported or timed. Exact durations, repeat hits, projectile hits,
+VANILLA, persistence, variants and multiplayer still need the acceptance pass below.
 
 Use a new world, Normal difficulty, cheats enabled, and only the GentleMobs
 prototype behavior pack. Enable the game's content log in Creator settings to
