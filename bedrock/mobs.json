@@ -1,0 +1,14 @@
+{
+  "blaze": "fly", "bogged": "walk", "breeze": "walk",
+  "cave_spider": "walk", "creaking": "walk", "creeper": "walk",
+  "drowned": "walk", "elder_guardian": "swim", "enderman": "walk",
+  "endermite": "walk", "evocation_illager": "walk", "ghast": "fly",
+  "guardian": "swim", "hoglin": "walk", "husk": "walk",
+  "magma_cube": "walk", "parched": "walk", "phantom": "fly",
+  "piglin": "walk", "piglin_brute": "walk", "pillager": "walk",
+  "ravager": "walk", "shulker": "teleport", "silverfish": "walk",
+  "skeleton": "walk", "slime": "walk", "spider": "walk", "stray": "walk",
+  "vex": "fly", "vindicator": "walk", "warden": "walk", "witch": "walk",
+  "wither_skeleton": "walk", "zoglin": "walk", "zombie": "walk",
+  "zombie_pigman": "walk", "zombie_villager": "walk", "zombie_villager_v2": "walk"
+}

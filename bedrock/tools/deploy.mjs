@@ -15,4 +15,4 @@ try {
 } catch (error) { if (error.code !== "ENOENT") throw error; }
 await mkdir(destination, { recursive: true });
 await cp(source, destination, { recursive: true });
-console.log(`Deployed ${destination}\nActivate GentleMobs - Zombie Prototype in a NEW test world's Behavior Packs. Reopen the world after changes.`);
+console.log(`Deployed ${destination}\nActivate ${manifest.header.name} in the test world's Behavior Packs. Reopen the world after changes.`);

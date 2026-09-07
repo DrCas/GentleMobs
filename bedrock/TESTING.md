@@ -1,4 +1,47 @@
-# Zombie prototype acceptance pass
+# Bedrock acceptance tests
+
+## 0.2.0 expanded preview
+
+Build/type-check and **49 automated checks pass**. This version expands to 38
+entity types and revises the zombie generator to share the same filters/guards.
+The 0.1.0 user-tested results below are historical evidence; new mobs and the
+revised zombie still need in-game regression testing.
+
+Windows Bedrock **26.45** smoke check on 2026-09-06: after reactivating the
+updated behavior pack, the script replied with global PASSIVE and no overrides.
+A creeper summoned two blocks in front of the Survival player did not explode
+or damage the player and subsequently wandered away. This checks initial calm
+behavior only; hit/flee, NEUTRAL, VANILLA and charged-fuse tests remain pending.
+The first reload did not respond to script commands; removing and reactivating
+the pack in world settings resolved it. A world backup was made through the
+game's "Copy and continue" option before reactivation.
+
+Use Normal difficulty and Survival mode. Clear leftover overrides, then set
+global PASSIVE. Use night/cover for undead. Test one mob at a time:
+
+1. Zombie regression: PASSIVE hit/flee, NEUTRAL retaliation/30-second calm,
+   VANILLA aggression and switching an existing attacker to PASSIVE.
+2. Creeper: proximity must not start a fuse in PASSIVE/calm NEUTRAL; a hit in
+   PASSIVE should cause retreat. VANILLA should ignite normally. Switch to
+   PASSIVE during a fuse, including charged creepers. Flint-and-steel ignition
+   intentionally remains vanilla.
+3. Skeleton/stray/bogged/parched: shooting in all three modes; repeat with melee
+   equipment and different difficulties to exercise component-group transitions.
+4. Spiders/Enderman: daylight/night targeting, staring, and retaliation in sunlight.
+5. Slime/magma cube: walk directly into different sizes to check contact damage.
+6. Nether/raiders: piglin gold/chest/group anger, baby hoglins, zoglins, ravager
+   roar, evoker summons, vindicator named Johnny and witch potions.
+7. Flying/aquatic/shulker: actual retreat in suitable terrain. Guardian spike
+   damage and mining fatigue remain known limitations.
+8. Warden: vibration, sniffing, melee, sonic boom, provocation and timeout.
+   Creaking: explicitly override it, then test player-spawned/heart-bound variants,
+   looking away, melee/projectile hits and heart destruction.
+9. Persistence, overrides, transformations, split slimes, chunk reloads, two
+   players and separate add-on compatibility tests.
+
+Wither and Ender Dragon remain vanilla and are not supported by this build.
+
+## 0.1.0 zombie prototype results
 
 Status: build/type-check and 8 automated tests pass. Initial Windows Bedrock
 **26.45** smoke check on 2026-09-06: pack activated in a new flat test world,

@@ -1,21 +1,22 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { build, transform } from "esbuild";
+import { build } from "esbuild";
 import { parse } from "jsonc-parser";
 import { runInNewContext } from "node:vm";
-import { gentleZombie } from "../tools/zombie.mjs";
+import { gentleMob, TARGET_GOALS } from "../tools/mobs.mjs";
 
-const source = await readFile(new URL("../src/policy.ts", import.meta.url), "utf8");
-const { code } = await transform(source, { loader: "ts", format: "esm" });
+const policyBuild = await build({ entryPoints: [new URL("../src/policy.ts", import.meta.url).pathname.replace(/^\/(\w:)/, "$1")], bundle: true, write: false, format: "esm" });
+const code = policyBuild.outputFiles[0].text;
 const policy = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);
 const vanilla = parse(await readFile(new URL("../vendor/zombie.jsonc", import.meta.url), "utf8"));
-const entity = gentleZombie(vanilla)["minecraft:entity"];
+const entity = gentleMob(vanilla, "walk")["minecraft:entity"];
+const mobs = JSON.parse(await readFile(new URL("../mobs.json", import.meta.url), "utf8"));
 
 test("config defaults, overrides and unsupported mobs", () => {
   const config = policy.parseConfig(undefined);
   assert.equal(policy.effectiveMode(config, "minecraft:zombie"), "PASSIVE");
-  for (const id of ["minecraft:skeleton", "minecraft:drowned", "cobblemon:pokemon", "other:zombie"]) {
+  for (const id of ["minecraft:cow", "minecraft:wither", "minecraft:ender_dragon", "cobblemon:pokemon", "other:zombie"]) {
     assert.equal(policy.effectiveMode(config, id), undefined);
   }
   const changed = policy.changeConfig(config, "gentlemobs:override", "minecraft:zombie neutral");
@@ -26,6 +27,10 @@ test("config defaults, overrides and unsupported mobs", () => {
   assert.throws(() => policy.changeConfig(config, "gentlemobs:mode", "PASSIVE extra"));
   assert.throws(() => policy.parseConfig('{"mode":"oops","overrides":{}}'));
   assert.equal(config.mode, "PASSIVE");
+  for (const name of Object.keys(mobs)) assert.equal(policy.effectiveMode(config, `minecraft:${name}`), name === "creaking" ? "VANILLA" : "PASSIVE");
+  const creeper = policy.changeConfig(config, "gentlemobs:override", "creeper NEUTRAL");
+  assert.equal(policy.effectiveMode(creeper, "minecraft:creeper"), "NEUTRAL");
+  assert.equal(policy.effectiveMode(creeper, "minecraft:skeleton"), "PASSIVE");
 });
 
 test("vanilla spawning, loot, transformations and all unrelated behavior remain intact", () => {
@@ -42,8 +47,11 @@ test("vanilla spawning, loot, transformations and all unrelated behavior remain 
       delete target.reevaluate_description;
     }
   }
+  delete restored.components["minecraft:behavior.avoid_mob_type"];
+  restored.components["minecraft:environment_sensor"].triggers.pop();
+  for (const c of Object.values(restored.component_groups)) c["minecraft:environment_sensor"]?.triggers.pop();
   assert.deepEqual(restored, vanilla["minecraft:entity"]);
-  assert.equal(entity.component_groups["gentlemobs:fleeing"]["minecraft:timer"], undefined);
+  assert.equal(entity.events["gentlemobs:flee"].set_property["gentlemobs:fleeing"], true);
 });
 
 function matches(filter, family, mode, engaged) {
@@ -98,7 +106,7 @@ function harness(saved) {
   const entities = [];
   const properties = new Map(saved === undefined ? [] : [["gentlemobs:config", saved]]);
   const world = {
-    afterEvents: Object.fromEntries(["worldLoad", "entitySpawn", "entityLoad", "entityRemove", "entityHurt"].map(n => [n, signal()])),
+    afterEvents: Object.fromEntries(["worldLoad", "entitySpawn", "entityLoad", "entityRemove", "entityHurt", "entityHitEntity"].map(n => [n, signal()])),
     getDynamicProperty: key => properties.get(key), setDynamicProperty: (key, value) => properties.set(key, value),
     getDimension: name => ({ getEntities: ({ type }) => name === "overworld" ? entities.filter(e => e.typeId === type) : [] })
   };

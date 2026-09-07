@@ -1,9 +1,10 @@
 # Vanilla baseline
 
-`zombie.jsonc` is Mojang's unmodified `behavior_pack/entities/zombie.json` from
-[bedrock-samples v1.26.40.05](https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/behavior_pack/entities/zombie.json).
-The entity definition's format version is 1.26.20. GentleMobs' build generates
-a modified copy for the behavior pack; the original stays here for comparison.
+Each `NAME.jsonc` is Mojang's unmodified `behavior_pack/entities/NAME.json` from
+[bedrock-samples v1.26.40.05](https://github.com/Mojang/bedrock-samples/tree/v1.26.40.05/behavior_pack/entities).
+The build generates modified copies of entities explicitly listed in `mobs.json`;
+originals stay here for comparison. Wither and Ender Dragon were reviewed but
+are not included in the generated behavior pack.
 
 Upstream [LICENSE.md](https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/LICENSE.md):
 

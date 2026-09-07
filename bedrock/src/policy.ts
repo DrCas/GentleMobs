@@ -1,12 +1,22 @@
+import mobs from "../mobs.json";
 export const MODES = ["PASSIVE", "NEUTRAL", "VANILLA"] as const;
 export type Mode = typeof MODES[number];
 export const ZOMBIE = "minecraft:zombie";
+export const SUPPORTED = Object.keys(mobs).map(name => `minecraft:${name}`);
+const supported = new Set(SUPPORTED);
+export function isSupported(type: string) { return supported.has(type); }
+export function movementFor(type: string) { return mobs[type.slice(10) as keyof typeof mobs]; }
+export function mobId(value: string): string {
+  const id = value.toLowerCase().includes(":") ? value.toLowerCase() : `minecraft:${value.toLowerCase()}`;
+  if (!isSupported(id)) throw new Error(`Unsupported mob: ${value}. Use gentlemobs:list to see supported Bedrock IDs.`);
+  return id;
+}
 export const FLEE_TICKS = 60;
 export const NEUTRAL_TICKS = 600;
 
 export interface Config {
   mode: Mode;
-  overrides: Partial<Record<typeof ZOMBIE, Mode>>;
+  overrides: Partial<Record<string, Mode>>;
 }
 
 export function parseMode(value: unknown): Mode {
@@ -27,14 +37,14 @@ export function parseConfig(raw: unknown): Config {
   }
   const overrides: Config["overrides"] = {};
   for (const [id, mode] of Object.entries(value.overrides)) {
-    if (id !== ZOMBIE) throw new Error(`Unsupported mob: ${id}`);
+    if (!isSupported(id)) throw new Error(`Unsupported mob: ${id}`);
     overrides[id] = parseMode(mode);
   }
   return { mode: parseMode(value.mode), overrides };
 }
 
 export function effectiveMode(config: Config, type: string): Mode | undefined {
-  return type === ZOMBIE ? config.overrides[ZOMBIE] ?? config.mode : undefined;
+  return isSupported(type) ? config.overrides[type] ?? (type === "minecraft:creaking" ? "VANILLA" : config.mode) : undefined;
 }
 
 export function changeConfig(config: Config, command: string, message: string): Config {
@@ -43,11 +53,10 @@ export function changeConfig(config: Config, command: string, message: string): 
     return { ...config, mode: parseMode(parts[0]) };
   }
   if (command === "gentlemobs:override" && parts.length === 2) {
-    const id = parts[0].toLowerCase();
-    if (id !== ZOMBIE && id !== "zombie") throw new Error("This prototype supports minecraft:zombie only.");
+    const id = mobId(parts[0]);
     const overrides = { ...config.overrides };
-    if (parts[1].toUpperCase() === "CLEAR") delete overrides[ZOMBIE];
-    else overrides[ZOMBIE] = parseMode(parts[1]);
+    if (parts[1].toUpperCase() === "CLEAR") delete overrides[id];
+    else overrides[id] = parseMode(parts[1]);
     return { ...config, overrides };
   }
   throw new Error("Use /scriptevent gentlemobs:mode PASSIVE or gentlemobs:override minecraft:zombie NEUTRAL|CLEAR.");

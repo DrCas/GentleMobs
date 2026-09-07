@@ -1,72 +1,121 @@
-# GentleMobs for Bedrock — zombie prototype
+# GentleMobs for Bedrock — mob preview
 
-Version **0.1.0 prototype**, targeting **Bedrock 26.40 or newer** with stable
-`@minecraft/server` 2.0.0. This is the first development milestone, not the
-complete Paper/NeoForge port or a Marketplace release.
+**0.2.0 development preview**, targeting **Bedrock 26.40+**, using stable
+`@minecraft/server` 2.0.0. This is an expanded test build, not a complete port or
+a Marketplace release. Paper, Fabric and NeoForge builds remain unchanged.
 
-Only **`minecraft:zombie`** is included. This means ordinary zombies, babies,
-and zombie riders. Husks, drowned, zombie villagers, other hostile mobs, bosses,
-and entities from other add-ons are not yet handled.
+## Included mobs
 
-## Intended behavior
+The explicit allowlist in `mobs.json` contains **38 Bedrock entity types**:
 
-| Mode | Zombie behavior toward players |
+| Group | Included |
 | --- | --- |
-| PASSIVE (default) | Ignores players. After a player hit, avoids nearby players for 60 ticks (3 seconds at 20 TPS), at 1.3× movement speed. |
-| NEUTRAL | Ignores players until hit by one. Player targeting is then allowed for 600 ticks (30 seconds at 20 TPS); another player hit refreshes the timeout. |
-| VANILLA | Normal targeting and combat. |
+| Zombies | Zombie, husk, drowned, both Bedrock zombie-villager definitions |
+| Skeletons | Skeleton, stray, bogged, parched, wither skeleton |
+| Other ground mobs | Creeper, spider, cave spider, silverfish, endermite, Enderman, slime, magma cube |
+| Nether mobs | Piglin, piglin brute, zombified piglin (`zombie_pigman`), hoglin, zoglin |
+| Raiders | Pillager, vindicator, evoker (`evocation_illager`), ravager, witch |
+| Flying and aquatic | Blaze, ghast, phantom, vex, guardian, elder guardian |
+| Special | Breeze, shulker, Warden, Creaking |
 
-Modes and the zombie override are saved with the world. Changing configuration
-clears temporary targets/combat state on loaded zombies. Reloading the world or
-an entity also clears temporary combat state. Non-player interactions retain
-vanilla behavior, including zombies attacking villagers and golems.
+Creaking defaults to **VANILLA**, matching the existing Paper configuration.
+An explicit `creaking` override enables its experimental handling. All other
+listed mobs follow the global mode unless overridden. Other add-on entities,
+passive animals and unlisted Minecraft IDs are not modified.
 
-## Install and try it on Windows
+**Wither and Ender Dragon are not supported yet and remain vanilla.** Their
+engine-controlled boss attacks need a separate implementation and validation.
+Their reviewed definitions are retained in `vendor/` but are not packaged as
+entity overrides. Java-only giants/illusioners have no Bedrock equivalent here.
+Inclusion in this list does not mean a mob has passed gameplay testing.
 
-1. Double-click `dist/GentleMobs-Bedrock-0.1.0-prototype.mcpack` to import it.
-   Developers who used `npm run deploy` already have it under development packs
-   and should use that copy instead of importing a second copy with the same UUID.
-2. Create a **new test world** and activate **GentleMobs - Zombie Prototype**
-   in its Behavior Packs. No resource pack or experimental toggle is required.
-3. Use **Easy, Normal or Hard**, with cheats enabled for the prototype commands.
-   Peaceful still follows vanilla spawning/despawning rules.
-4. Enter the world, then use the commands below. Test combat in Survival;
-   Creative players are normally ignored by hostile mobs anyway.
+## Modes and commands
+
+| Mode | Intended behavior toward players |
+| --- | --- |
+| PASSIVE | Ignores players; flees after a player hit for 60 ticks (3 seconds at 20 TPS). |
+| NEUTRAL | Ignores players until attacked; permits retaliation for 600 ticks (30 seconds at 20 TPS). Another player hit refreshes that period. |
+| VANILLA | Allows normal targeting and combat. |
+
+Configuration persists in the world, including overrides from the 0.1.0 zombie
+prototype. Changing modes or loading an entity clears temporary combat/flee
+state. NEUTRAL permits targeting nearby eligible players, not exclusively the
+attacker. Non-player targets and interactions retain vanilla behavior except
+where special handling below affects them.
+
+Run these separately, with cheats enabled and operator permissions:
 
 ```mcfunction
-/scriptevent gentlemobs:status
 /scriptevent gentlemobs:mode PASSIVE
 /scriptevent gentlemobs:mode NEUTRAL
 /scriptevent gentlemobs:mode VANILLA
-/scriptevent gentlemobs:override minecraft:zombie NEUTRAL
-/scriptevent gentlemobs:override minecraft:zombie CLEAR
+/scriptevent gentlemobs:override creeper PASSIVE
+/scriptevent gentlemobs:override creeper CLEAR
+/scriptevent gentlemobs:status
+/scriptevent gentlemobs:status minecraft:skeleton
+/scriptevent gentlemobs:list
 ```
 
-These use Bedrock's operator/cheat-gated `/scriptevent` command. Mode names are
-case-insensitive. Overrides take precedence over the global setting. Unsupported
-entity IDs and invalid modes are rejected. A player issuing a command gets a
-private response; commands from the server/command blocks report to the log.
+Short Bedrock names or full `minecraft:` IDs work. Modes are case-insensitive.
+Unknown IDs are rejected. The list command shows exact IDs; use
+`evocation_illager`, not Java's `evoker`. Clearing the Creaking override restores
+its VANILLA default.
 
-For a dedicated Bedrock server, copy the built `dist/GentleMobs_BP` directory
-into the server's `behavior_packs`, and add the following object to the desired
-world's `world_behavior_packs.json` array while the server is stopped. Preserve
-any existing entries. Match the server version to the pack's minimum version.
+## Install or update
+
+Installable file: `dist/GentleMobs-Bedrock-0.2.0-preview.mcpack`.
+
+1. Save and leave your test world before updating.
+2. Double-click the `.mcpack` to import it, or use `npm run deploy` for a local
+   development copy. Avoid importing a second copy alongside the development pack.
+3. In world settings, activate **GentleMobs - Mob Preview** under **Behavior Packs**.
+   It retains the 0.1.0 pack UUID and saved settings. If Bedrock still shows the
+   old pack/version, restart the game and reactivate it.
+4. Use **Easy, Normal or Hard** difficulty. Peaceful still applies vanilla
+   spawning/despawning rules. No resource pack or experiments are required.
+5. Enable cheats for commands and use Survival for targeting tests. An old test
+   world may still have global VANILLA selected: explicitly set PASSIVE.
+
+For a dedicated Bedrock server, copy `dist/GentleMobs_BP` to `behavior_packs`,
+then add/update this entry in the desired world's `world_behavior_packs.json`
+array while the server is stopped. Preserve other pack entries:
 
 ```json
 {
   "pack_id": "5c385238-6e64-43d2-bcde-105360b7d06b",
-  "version": [0, 1, 0]
+  "version": [0, 2, 0]
 }
 ```
 
-Dedicated server and console/Realm play have not been tested with this prototype.
+Dedicated servers, console/Realm play and multiplayer have not yet been tested.
 
-## Development
+## Special handling and limits
 
-This directory is an independent TypeScript/JSON project in the existing
-GentleMobs repository. Paper, Fabric and NeoForge sources/builds are unchanged.
-Java's mode names, default timing and override concepts carry over; Minecraft AI
-integration must use Bedrock entity definitions and Script API instead of Java.
+- Target filters apply to base components and every native component-group
+  variant, including skeleton weapons/difficulty, spiders' daylight states and
+  piglin gold/chest targeting. A native sensor clears protected player targets
+  acquired through another route, such as anger broadcasts.
+- Creepers gate automatic ignition and clear normal/charged automatic fuses when
+  calmed. **Intentional flint-and-steel ignition remains vanilla.**
+- Slime/magma-cube contact damage and ravager roar damage/knockback filter out
+  protected players, separately from ordinary targeting.
+- Enderman staring and Warden nuisance tracking use the same mode rules.
+  Warden sonic-boom transitions still need gameplay tests; darkness is retained.
+  Creaking overrides preserve heart/death events and detect melee hits even when
+  health does not decrease; heart-bound projectile hits need testing.
+- Walkers/swimmers use native avoidance after a hit, retaining existing avoidance
+  of cats/wolves. Flying mobs receive bounded impulse steering away from the
+  attacker; native flight can affect the result. Shulkers try a clear supported
+  position farther away, and stay put if none is found.
+- Guardian spikes and elder-guardian mining fatigue are native side effects and
+  are **not suppressed by this preview**. Guardians are not yet fully equivalent
+  to the plugin's PASSIVE behavior.
+- Already-fired projectiles and lingering effects are not erased by mode changes.
+- Wither/Ender Dragon support and alternate progression recipes remain unfinished.
+- Another pack overriding the same vanilla mob definition can conflict. Entity
+  definitions do not merge automatically.
+
+## Build and validation
 
 With Node.js and npm installed:
 
@@ -77,56 +126,13 @@ npm.cmd run build
 npm.cmd run deploy
 ```
 
-`build` type-checks the scripts, runs automated tests, bundles JavaScript, generates
-the modified entity definition, and creates the `.mcpack` in `dist/`.
-`deploy` copies the built pack to the current Windows Bedrock development folder.
-You can pass a different `com.mojang` directory using `npm run deploy -- <path>`.
-Exit and reopen the test world after deploying changes.
+`build` type-checks, runs 49 automated checks, bundles scripts, generates the
+allowlisted definitions and creates the `.mcpack`. Tests check mode logic,
+script events/timing with a mocked API, special filters and preservation of
+unrelated vanilla data for every included definition, such as loot, equipment,
+spawning and transformations. **They do not run Minecraft's AI.** See
+[TESTING.md](TESTING.md) for observed gameplay results and the acceptance pass.
 
-The original Mojang zombie definition is in `vendor/zombie.jsonc`, with provenance
-and licensing in [vendor/NOTICE.md](vendor/NOTICE.md). It comes from the stable
-`v1.26.40.05` sample release and structurally matches the installed Windows
-1.26.4501.0 game's latest zombie definition. The generator adds GentleMobs
-properties/events and wraps player-target filters. Original spawn events,
-equipment, loot, daylight damage, movement, horse behavior and drowned
-transformations remain in the baseline. Future Bedrock updates require a baseline
-review; the minimum version alone does not guarantee future compatibility.
-
-## Verification and known differences
-
-Automated checks cover configuration/persistence, unsupported entity exclusion,
-target filter logic, preservation of unrelated vanilla data, projectile ownership,
-and script event/timer behavior in a mocked Script API. They **do not execute
-Minecraft's AI**. An initial Bedrock 26.45 smoke check confirmed pack activation,
-the status command and an adult zombie ignoring a Survival player in PASSIVE.
-The user also confirmed in-game fleeing after a hit in PASSIVE mode.
-NEUTRAL was subsequently reported working by the user; its exact timeout has
-not been separately timed.
-The user also confirmed unprovoked attacks in VANILLA, completing the basic
-adult-zombie behavior checks for all three modes.
-Switching an actively attacking zombie from VANILLA to PASSIVE also passed:
-the user confirmed that attacks stopped and observed it running away.
-Global mode persistence also passed: after leaving and reopening the world,
-the user confirmed PASSIVE was retained and the zombie still ignored them.
-The PASSIVE zombie override also passed with global VANILLA selected; the user
-reported that a separately summoned creeper retained normal behavior.
-Clearing the zombie override also passed: the user confirmed it attacked again
-under the global VANILLA setting.
-The remaining in-game acceptance checks are pending; see TESTING.md.
-
-The current differences and limits are:
-
-- Only zombies are included; no alternate Nether Star/Dragon's Breath recipes yet.
-- Fleeing uses Bedrock's navigation/avoid-mob goal and avoids nearby players,
-  rather than tracking only the attacker. Paths and obstacles determine movement.
-- Engaged neutral zombies may target nearby eligible players, not just the attacker.
-- A zombie transformed into a drowned resumes vanilla drowned behavior because
-  drowned support has not been added yet.
-- This pack overrides the vanilla zombie behavior definition. Another pack
-  overriding that same definition can conflict; vanilla overrides do not merge.
-- It does not keep hostile mobs alive in Peaceful difficulty or replace the
-  difficulty system. Other unsupported mobs remain dangerous in this prototype.
-- No Marketplace acceptance, complete parity, or broad add-on compatibility is
-  claimed. Those are separate milestones after gameplay verification and expansion.
-
-See [TESTING.md](TESTING.md) for the first in-game acceptance pass.
+The baseline is pinned to Mojang's stable `bedrock-samples v1.26.40.05`; see
+[vendor/NOTICE.md](vendor/NOTICE.md). Future Minecraft updates require baseline
+review. The minimum version is not a guarantee of future compatibility.

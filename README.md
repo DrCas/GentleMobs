@@ -9,7 +9,7 @@ GentleMobs supports PASSIVE, NEUTRAL and VANILLA hostile-mob behavior, per-mob o
 | Fabric (existing) | Root `build.gradle.kts` | `src/fabricMain` | Existing Minecraft 26.2 build |
 | Paper (existing sources) | `paper/build.gradle.kts` | `src/main` | Existing Minecraft 26.2 build |
 | NeoForge (new) | `neoforge/build.gradle` | `neoforge/src/main` | Minecraft 1.21.1 / NeoForge 21.1.249 |
-| Bedrock (prototype) | `bedrock/package.json` | `bedrock/src`, `bedrock/vendor` | Bedrock 26.40+; vanilla zombies only |
+| Bedrock (preview) | `bedrock/package.json` | `bedrock/src`, `bedrock/vendor` | Bedrock 26.40+; 38 vanilla entity types |
 
 The Paper and Fabric builds target Minecraft **26.2**. The `paper/` entry point compiles the existing Paper sources in place with their original dependency and Java version. The NeoForge build targets Minecraft **1.21.1** independently.
 
@@ -40,7 +40,7 @@ Paper artifact: `paper/build/libs/GentleMobs-0.2.0.jar`.
 
 See [NeoForge installation, configuration and behavior notes](neoforge/README.md).
 
-The [Bedrock zombie prototype](bedrock/README.md) is a separate TypeScript/JSON
+The [Bedrock mob preview](bedrock/README.md) is a separate TypeScript/JSON
 behavior pack. It is an early development preview, not a complete port or a
 Marketplace release. See its README for building, installation and known limits.
 
