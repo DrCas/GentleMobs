@@ -10,8 +10,10 @@ revised zombie still need in-game regression testing.
 Windows Bedrock **26.45** smoke check on 2026-09-06: after reactivating the
 updated behavior pack, the script replied with global PASSIVE and no overrides.
 A creeper summoned two blocks in front of the Survival player did not explode
-or damage the player and subsequently wandered away. This checks initial calm
-behavior only; hit/flee, NEUTRAL, VANILLA and charged-fuse tests remain pending.
+or damage the player and subsequently wandered away. The user subsequently
+confirmed that hitting the creeper in PASSIVE makes it run away. Initial calm
+and basic hit/flee checks pass; NEUTRAL, VANILLA and charged-fuse tests remain
+pending. Exact flee duration and repeated hits have not been separately tested.
 The first reload did not respond to script commands; removing and reactivating
 the pack in world settings resolved it. A world backup was made through the
 game's "Copy and continue" option before reactivation.
