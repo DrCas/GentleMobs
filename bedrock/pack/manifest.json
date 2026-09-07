@@ -1,0 +1,29 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "GentleMobs - Zombie Prototype",
+    "description": "Development preview: PASSIVE, NEUTRAL and VANILLA modes for vanilla zombies only.",
+    "uuid": "5c385238-6e64-43d2-bcde-105360b7d06b",
+    "version": [0, 1, 0],
+    "min_engine_version": [1, 26, 40]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "0743cb6b-a4fb-4fc9-a4c1-8415b91dcce0",
+      "version": [0, 1, 0]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "entry": "scripts/main.js",
+      "uuid": "8d28920d-8679-4937-bb28-784d2839e581",
+      "version": [0, 1, 0]
+    }
+  ],
+  "dependencies": [{ "module_name": "@minecraft/server", "version": "2.0.0" }],
+  "metadata": {
+    "authors": ["DrCas"],
+    "url": "https://github.com/DrCas/GentleMobs"
+  }
+}
