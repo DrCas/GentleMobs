@@ -102,6 +102,8 @@ the status command and an adult zombie ignoring a Survival player in PASSIVE.
 The user also confirmed in-game fleeing after a hit in PASSIVE mode.
 NEUTRAL was subsequently reported working by the user; its exact timeout has
 not been separately timed.
+The user also confirmed unprovoked attacks in VANILLA, completing the basic
+adult-zombie behavior checks for all three modes.
 The remaining in-game acceptance checks are pending; see TESTING.md.
 
 The current differences and limits are:

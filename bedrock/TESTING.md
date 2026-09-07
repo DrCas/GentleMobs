@@ -6,8 +6,11 @@ status command returned PASSIVE, and a summoned adult zombie ignored the nearby
 Survival player. The user subsequently confirmed that the zombie flees after
 being hit in PASSIVE mode: the basic fleeing check passes. The user also reported
 that NEUTRAL worked in their in-game test. The exact neutral timeout was not
-separately reported or timed. Exact durations, repeat hits, projectile hits,
-VANILLA, persistence, variants and multiplayer still need the acceptance pass below.
+separately reported or timed. The user confirmed that VANILLA attacks the
+Survival player without being hit first. Basic adult-zombie behavior has now
+passed in all three modes. Exact durations, switching an actively attacking
+zombie back to PASSIVE, repeat hits, projectile hits, persistence, variants and
+multiplayer still need the acceptance pass below.
 
 Use a new world, Normal difficulty, cheats enabled, and only the GentleMobs
 prototype behavior pack. Enable the game's content log in Creator settings to
